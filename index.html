@@ -3,614 +3,490 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visuals — 全功能流媒体创作者平台 (带特权编辑)</title>
+    <title>VISUALS - 光影的轮廓</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
     <style>
-        :root {
-            --bg-color: #0b0b0c;
-            --card-bg: #161617;
-            --text-color: #f5f5f7;
-            --text-secondary: #86868b;
-            --apple-blue: #0071e3;
-            --apple-red: #ff3b30;
-            --pinterest-red: #e60023;
-            --success-green: #07c160;
+        /* --- 基础与苹果暗黑美学定义 --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-top: 56px; overflow-x: hidden; }
-
-        /* --- 导航栏 --- */
-        nav {
-            position: fixed; top: 0; width: 100%; height: 56px;
-            background: rgba(11, 11, 12, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            z-index: 999; display: flex; justify-content: space-between; align-items: center; padding: 0 40px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        body {
+            background-color: #000000;
+            color: #f5f5f7;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+            padding-top: 80px; /* 留出悬浮导航栏空间 */
         }
-        nav .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; cursor: pointer; color: #fff; }
-        .nav-right { display: flex; align-items: center; gap: 16px; }
-        .role-badge { font-size: 12px; padding: 6px 14px; border-radius: 20px; background: rgba(255,255,255,0.08); color: #fff; font-weight: 500; cursor: pointer; display: none; border: 1px solid rgba(255,255,255,0.05); }
-        .role-badge:hover { background: rgba(255,255,255,0.15); }
-        nav button { background: none; border: none; font-size: 13px; cursor: pointer; transition: all 0.3s; }
-        #gatekeeperBtn { color: #fff; background: var(--apple-blue); padding: 7px 16px; border-radius: 8px; font-weight: 500; }
-        #gatekeeperBtn:hover { background: #0077ed; }
-        .upload-btn-trigger { color: var(--apple-blue) !important; font-weight: 600; display: none; }
 
-        /* --- 浏览大厅首屏 --- */
-        .hero { height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        .hero h1 { font-size: 52px; font-weight: 700; letter-spacing: -1px; background: linear-gradient(180deg, #fff 40%, #86868b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
-        .hero p { font-size: 15px; color: var(--text-secondary); max-width: 600px; line-height: 1.6; margin-bottom: 24px; }
-        
-        .filter-nav { display: flex; background: #1c1c1e; padding: 4px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.03); }
-        .filter-btn { background: none; border: none; color: var(--text-secondary); padding: 8px 22px; font-size: 13px; font-weight: 500; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
-        .filter-btn:hover { color: #fff; }
-        .filter-btn.active { background: #fff; color: #000; font-weight: 600; }
+        /* --- 1. Mac-style 磨砂玻璃导航栏 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 100;
+        }
 
-        /* --- 瀑布流组件 --- */
-        .gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 40px 100px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px; }
-        .gallery-item { background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.04); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
-        .gallery-item:hover { transform: translateY(-4px); }
-        .photo-wrapper { width: 100%; position: relative; overflow: hidden; background: #121213; cursor: pointer; }
-        
-        .photo-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(135deg, #1c1c1e 0%, #0c0c0d 100%); color: #424245; font-weight: 600; font-size: 16px; text-align: center; padding: 20px; }
-        .photo-placeholder span { font-size: 11px; color: #6e6e73; font-weight: 400; margin-top: 6px; }
-        .photo-wrapper img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
 
-        /* 特权操控按钮组 */
-        .action-group { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; opacity: 0; transition: opacity 0.2s ease; z-index: 10; }
-        .photo-wrapper:hover .action-group { opacity: 1; }
-        .action-btn { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 5px 11px; font-size: 11px; font-weight: 600; border-radius: 20px; cursor: pointer; }
-        .action-btn.btn-edit:hover { background: var(--apple-blue); border-color: var(--apple-blue); }
-        .action-btn.btn-delete:hover { background: var(--apple-red); border-color: var(--apple-red); }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-        /* 构图比例 */
-        .ratio-21-9 { aspect-ratio: 21 / 9; } .ratio-16-9 { aspect-ratio: 16 / 9; } .ratio-3-2 { aspect-ratio: 3 / 2; } .ratio-9-16 { aspect-ratio: 9 / 16; }
-        .photo-info { padding: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .photo-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .photo-exif { font-size: 12px; color: var(--text-secondary); }
-        .photo-author-tag { font-size: 11px; color: var(--apple-blue); font-weight: 500; margin-top: 6px; }
-        .photo-ratio-tag { font-size: 11px; background: rgba(255,255,255,0.06); padding: 4px 8px; border-radius: 6px; color: var(--text-secondary); }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            color: #f5f5f7;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
 
-        /* --- Pinterest 风格创作者独立主页 --- */
-        .profile-section { display: none; max-width: 1400px; margin: 30px auto; text-align: center; padding: 0 40px; }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: #2d2d2f; margin: 0 auto 16px auto; display: flex; justify-content: center; align-items: center; font-size: 40px; border: 2px solid rgba(255,255,255,0.1); }
-        .profile-name { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-        .profile-username { font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; }
-        .profile-bio { font-size: 14px; color: #e5e5ea; max-width: 500px; margin: 0 auto 20px auto; line-height: 1.6; }
-        .profile-stats { font-size: 14px; color: #fff; margin-bottom: 24px; }
-        .profile-stats span { color: var(--text-secondary); font-weight: 400; margin-right: 12px; }
-        
-        .profile-actions { display: flex; justify-content: center; gap: 10px; margin-bottom: 48px; }
-        .pinterest-btn { background: #2c2c2e; color: #fff; border: none; padding: 10px 20px; border-radius: 24px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .pinterest-btn:hover { background: #3a3a3c; }
-        .pinterest-btn-red { background: var(--pinterest-red); }
-        .pinterest-btn-red:hover { background: #b6001a; }
+        .nav-btn:hover {
+            background: #ffffff;
+            color: #000000;
+        }
 
-        .profile-gallery-title { font-size: 16px; font-weight: 600; text-align: left; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; color: var(--text-secondary); }
+        .nav-btn.primary {
+            background: #0071e3; /* Apple 经典蓝色 */
+            border: none;
+        }
 
-        /* --- 弹窗组件中心 --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 1001; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 20px; width: 95%; max-width: 440px; padding: 32px; position: relative; }
-        .close-btn { position: absolute; top: 16px; right: 16px; background: #2c2c2e; border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 12px; }
+        .nav-btn.primary:hover {
+            background: #147ce5;
+            color: #ffffff;
+        }
 
-        /* 登录Tab选项卡 */
-        .login-tabs { display: flex; background: #2c2c2e; padding: 3px; border-radius: 8px; margin-bottom: 20px; }
-        .login-tab-item { flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-radius: 6px; }
-        .login-tab-item.active { background: var(--card-bg); color: #fff; }
+        /* --- 2. 苹果大字报首屏 (Hero Section) --- */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-        /* 登录身份矩阵 */
-        .platform-selector { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-        .platform-btn { background: #2c2c2e; border: 2px solid transparent; border-radius: 8px; padding: 10px 4px; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; text-align: center; }
-        .platform-btn.selected[data-type="wechat"] { border-color: var(--success-green); color: var(--success-green); background: rgba(7,193,96,0.05); }
-        .platform-btn.selected[data-type="qq"] { border-color: var(--apple-blue); color: var(--apple-blue); background: rgba(0,113,227,0.05); }
-        .platform-btn.selected[data-type="developer"] { border-color: #ffffff; color: #ffffff; background: rgba(255,255,255,0.05); }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
 
-        /* App 扫码连通面板 */
-        .qrcode-container { display: none; flex-direction: column; align-items: center; padding: 10px 0; }
-        .qrcode-box { width: 160px; height: 160px; background: #fff; border-radius: 12px; padding: 12px; display: flex; justify-content: center; align-items: center; position: relative; }
-        .qrcode-box::after { content: '已联通 App 移动无线端口'; position: absolute; bottom: -28px; font-size: 11px; color: var(--success-green); font-weight: 500; }
+        .hero p {
+            font-size: 16px;
+            color: #86868b;
+            line-height: 1.5;
+            font-weight: 300;
+        }
 
-        /* 表单架构 */
-        .form-group { margin-bottom: 16px; display: flex; flex-direction: column; }
-        .form-group label { font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 500; letter-spacing: 0.5px; }
-        .form-group input, .form-group select { background: #2c2c2e; border: 1px solid #3a3a3c; border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
-        .form-group input:focus { border-color: var(--apple-blue); }
-        .submit-btn { background: var(--apple-blue); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; margin-top: 8px; }
-        .submit-btn:hover { background: #0077ed; }
+        /* --- 3. 分类标签栏 --- */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
 
-        /* 发布与编辑中心 */
-        .upload-card { max-width: 640px; }
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 12px; }
-        .file-drop-zone { border: 2px dashed #3a3a3c; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; min-height: 240px; cursor: pointer; color: var(--text-secondary); text-align: center; background-size: cover !important; background-position: center !important; }
+        .category-tab {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #86868b;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
-        /* 统一大图灯箱 */
-        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lightbox img { max-width: 92%; max-height: 85vh; object-fit: contain; border-radius: 8px; }
+        .category-tab:hover {
+            color: #ffffff;
+        }
+
+        .category-tab.active {
+            background: #ffffff;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        /* --- 4. 作品卡片流 (流线布局与 3D 视差准备) --- */
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 80px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+            perspective: 1000px; /* 为3D翻转提供透视空间 */
+        }
+
+        .card-wrapper {
+            transition: transform 0.1s ease;
+            transform-style: preserve-3d;
+        }
+
+        .card {
+            background: #121212;
+            border-radius: 22px; /* 苹果偏爱的大圆角 */
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            /* 0.5px 高光修边边缘线 */
+            border: 0.5px solid rgba(255, 255, 255, 0.08); 
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* 悬浮时的复合动态效果 */
+        .card-wrapper:hover .card {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .image-container {
+            width: 100%;
+            background-color: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 预设几种常见高级构图比例 */
+        .ratio-21-9 { aspect-ratio: 21 / 9; }
+        .ratio-3-2 { aspect-ratio: 3 / 2; }
+        .ratio-16-9 { aspect-ratio: 16 / 9; }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .card:hover .image-container img {
+            transform: scale(1.03); /* 细腻的图片微缩放大 */
+        }
+
+        /* 卡片文字区 */
+        .card-info {
+            padding: 24px;
+            background: #121212;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .card-author {
+            font-size: 13px;
+            color: #0071e3;
+        }
+
+        /* --- 5. App Store 级别沉浸式膨胀弹窗 --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: #161617;
+            width: 100%;
+            max-width: 1100px;
+            max-height: 85vh;
+            border-radius: 30px;
+            overflow-y: auto;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.95) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .modal-hero-img {
+            width: 100%;
+            max-height: 60vh;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .modal-content {
+            padding: 40px;
+        }
+
+        /* 交互式 Exif 仪表盘设计 */
+        .exif-dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            background: rgba(255,255,255,0.03);
+            padding: 24px;
+            border-radius: 18px;
+            border: 0.5px solid rgba(255,255,255,0.05);
+            margin-top: 30px;
+        }
+
+        .exif-item {
+            text-align: center;
+        }
+
+        .exif-label {
+            font-size: 11px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .exif-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .gallery-container { grid-template-columns: 1fr; padding: 0 20px; }
+            .exif-dashboard { grid-template-columns: repeat(2, 1fr); }
+            header { padding: 0 20px; }
+            .hero h1 { font-size: 36px; }
+        }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo" onclick="showMainShowcase()">VISUALS</div>
+    <header>
+        <div class="logo">Visuals</div>
         <div class="nav-right">
-            <span class="role-badge" id="roleBadge" onclick="showProfileSection()">👤 创作者个人中心</span>
-            <button class="upload-btn-trigger" id="openUploadBtn" onclick="openUpload()">+ 发布作品</button>
-            <button id="gatekeeperBtn" onclick="handleGatekeeperClick()">🔑 账户登录</button>
+            <button class="nav-btn" onclick="alert('进入高级开发者个人中心')">系统高级开发者个人中心</button>
+            <button class="nav-btn primary" onclick="alert('触发发布作品流')">+ 发布作品</button>
+            <button class="nav-btn" onclick="alert('安全退出')">退出账户</button>
         </div>
-    </nav>
+    </header>
 
-    <div class="modal-overlay" id="loginOverlay">
-        <div class="modal-card">
-            <button class="close-btn" onclick="closeLoginModal()">✕</button>
-            <h2 style="font-size:20px; text-align:center; margin-bottom:4px;">接入 App 服务端口</h2>
-            <p style="font-size:12px; color:var(--text-secondary); text-align:center; margin-bottom:20px;">选择准入身份，打通端对端流媒体控制线</p>
-            
-            <div class="platform-selector">
-                <button class="platform-btn selected" data-type="wechat" onclick="selectPlatform('wechat')">🟢 微信作者</button>
-                <button class="platform-btn" data-type="qq" onclick="selectPlatform('qq')">🔵 QQ撰稿人</button>
-                <button class="platform-btn" data-type="developer" onclick="selectPlatform('developer')">👨‍💻 开发者</button>
-            </div>
-
-            <div class="login-tabs">
-                <div class="login-tab-item active" id="tabPwd" onclick="switchLoginMode('pwd')">密码安全验证</div>
-                <div class="login-tab-item" id="tabCode" onclick="switchLoginMode('code')">App 扫码登录</div>
-            </div>
-
-            <div id="pwdFormZone">
-                <div class="form-group">
-                    <label id="passwordLabel">微信特约作者独立密码</label>
-                    <input type="password" id="accountPasswordInput" placeholder="请输入密码">
-                </div>
-                <button class="submit-btn" onclick="verifyAccountPassword()">验证并接入端口</button>
-            </div>
-
-            <div id="codeFormZone" class="qrcode-container">
-                <div class="qrcode-box">
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M3 3h6v6H3V3zm12 0h6v6h-6V3zm0 12h6v6h-6v-6zM3 15h6v6H3v-6zm4-8H5v2h2V7zm12 0h-2v2h2V7zm0 12h-2v2h2v-2zM7 19H5v2h2v-2zm7-4h2v2h-2v-2zm2 2h2v2h-2v-2z"/></svg>
-                </div>
-                <button class="submit-btn" style="background:#2c2c2e; margin-top:45px;" onclick="simulateQrScan()">[ 模拟移动端 App 扫码成功 ]</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="pwdModifyOverlay">
-        <div class="modal-card" style="max-width:360px;">
-            <button class="close-btn" onclick="closePwdModal()">✕</button>
-            <h3 style="font-size:16px; margin-bottom:12px;">安全重置账户密码</h3>
-            <div class="form-group">
-                <label>全新登录密码</label>
-                <input type="password" id="newPwdInput" placeholder="请键入新长效密码">
-            </div>
-            <button class="submit-btn" onclick="saveNewPassword()">确认重置</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="bioModifyOverlay">
-        <div class="modal-card" style="max-width:360px;">
-            <button class="close-btn" onclick="closeBioModal()">✕</button>
-            <h3 style="font-size:16px; margin-bottom:12px;">编辑基本信息</h3>
-            <div class="form-group">
-                <label>关于你的简介 (Pinterest 风格)</label>
-                <input type="text" id="newBioInput" placeholder="书写你的视觉艺术格言...">
-            </div>
-            <button class="submit-btn" onclick="saveNewBio()">确认应用修改</button>
-        </div>
-    </div>
-
-    <div id="mainShowcaseZone">
-        <section class="hero">
-            <h1>光影的轮廓</h1>
-            <p>透过不同媒介的视界，捕捉转瞬即逝的瞬间。开发者与作者现已全面解锁最高编辑修改权限。</p>
-            <div class="filter-nav">
-                <button class="filter-btn active" onclick="handleFilterClick(this, 'all')">全部作品</button>
-                <button class="filter-btn" onclick="handleFilterClick(this, 'portrait')">人像</button>
-                <button class="filter-btn" onclick="handleFilterClick(this, 'nature')">自然</button>
-                <button class="filter-btn" onclick="handleFilterClick(this, 'cosplay')">Cosplay</button>
-            </div>
-        </section>
-        <main class="gallery-container" id="galleryContainer"></main>
-    </div>
-
-    <section class="profile-section" id="profileSectionZone">
-        <div class="profile-avatar" id="profAvatar">📸</div>
-        <h2 class="profile-name" id="profName">加载中...</h2>
-        <div class="profile-username" id="profRoleTag">@creator</div>
-        <p class="profile-bio" id="profBio">未设置任何视觉简介。</p>
-        
-        <div class="profile-stats">
-            <strong>4.8k</strong> <span>粉丝</span> · <strong>521</strong> <span>关注</span>
-        </div>
-
-        <div class="profile-actions">
-            <button class="pinterest-btn pinterest-btn-red" onclick="openUpload()">+ 发布全新摄影资产</button>
-            <button class="pinterest-btn" onclick="openBioModal()">编辑基本信息</button>
-            <button class="pinterest-btn" onclick="openPwdModal()">⚙️ 更改账户密码</button>
-        </div>
-
-        <div class="profile-gallery-title">已上传的个人摄影作品概览</div>
-        <div class="gallery-container" id="profileGalleryContainer" style="padding:0;"></div >
+    <section class="hero">
+        <h1>光影的轮廓</h1>
+        <p>透过不同媒介的视界，捕捉转瞬即逝的瞬间。开发者与作者现已全面解锁最高编辑修改权限。</p>
     </section>
 
-    <div class="modal-overlay" id="uploadOverlay">
-        <div class="modal-card upload-card">
-            <button class="close-btn" onclick="closeUploadModal()">✕</button>
-            <h3 style="font-size:18px; font-weight:600; margin-bottom:12px;" id="uploadPanelTitle">发布全新摄影资产</h3>
-            <div class="upload-grid">
-                <div class="file-drop-zone" id="dropZone" onclick="triggerFileInput()">
-                    <p id="dropZoneText">点击选择或拖拽本地图片文件</p>
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect()">
+    <div class="categories">
+        <div class="category-tab active" onclick="filterCategory('all', this)">全部作品</div>
+        <div class="category-tab" onclick="filterCategory('portrait', this)">人像</div>
+        <div class="category-tab" onclick="filterCategory('nature', this)">自然</div>
+        <div class="category-tab" onclick="filterCategory('cosplay', this)">Cosplay</div>
+    </div>
+
+    <main class="gallery-container" id="galleryGrid">
+        
+        <div class="card-wrapper" data-category="nature">
+            <div class="card" onclick="openLightbox('金色林海', 'Hasselblad X2D', '38mm', 'f/4.0', '1/160s', '21:9', '系统预设', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80')">
+                <div class="image-container ratio-21-9">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="金色林海">
                 </div>
-                <div style="display: flex; flex-direction: column; justify-content: space-between;">
-                    <div>
-                        <div class="form-group">
-                            <label>流派标签分类归属</label>
-                            <select id="photoTopic">
-                                <option value="portrait">人像 (Portrait)</option>
-                                <option value="nature">自然 (Nature)</option>
-                                <option value="cosplay">Cosplay</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>资产标题</label>
-                            <input type="text" id="photoTitle" placeholder="设置图片发布名称">
-                        </div>
-                        <div class="form-group">
-                            <label>建议媒介构图比例</label>
-                            <select id="photoRatio">
-                                <option value="ratio-3-2">3:2 原生全画幅单反</option>
-                                <option value="ratio-16-9">16:9 数字流媒体画幅</option>
-                                <option value="ratio-21-9">21:9 宽银幕电影构图</option>
-                                <option value="ratio-9-16">9:16 移动端竖屏流美学</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>EXIF 参数归档</label>
-                            <input type="text" id="photoExif" placeholder="例如：Leica M11 · 50mm">
-                        </div>
+                <div class="card-info">
+                    <div class="card-meta">
+                        <span>Hasselblad X2D · 38mm</span>
+                        <span class="badge">21:9</span>
                     </div>
-                    <button class="submit-btn" id="publishCommitBtn" onclick="executePublish()">确认推流发布</button>
+                    <div class="card-title">金色林海</div>
+                    <div class="card-author">By: 系统预设</div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <img src="" id="lightboxImg">
+        <div class="card-wrapper" data-category="portrait">
+            <div class="card" onclick="openLightbox('逆光情绪', 'Sony A7R5', '85mm', 'f/1.4', '1/250s', '3:2', '系统预设', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80')">
+                <div class="image-container ratio-3-2">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="逆光情绪">
+                </div>
+                <div class="card-info">
+                    <div class="card-meta">
+                        <span>Sony A7R5 · 85mm</span>
+                        <span class="badge">3:2</span>
+                    </div>
+                    <div class="card-title">逆光情绪</div>
+                    <div class="card-author">By: 系统预设</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeLightbox(force=true)">✕</button>
+            <img class="modal-hero-img" id="modalImg" src="" alt="大图预览">
+            <div class="modal-content">
+                <h2 id="modalTitle" style="font-size: 28px; font-weight:600; margin-bottom:8px;">作品标题</h2>
+                <p id="modalAuthor" style="color:#0071e3; font-size:14px; margin-bottom:20px;">By: 作者</p>
+                
+                <div class="exif-dashboard">
+                    <div class="exif-item">
+                        <div class="exif-label">相机机身</div>
+                        <div class="exif-value" id="exifCamera">-</div>
+                    </div>
+                    <div class="exif-item">
+                        <div class="exif-label">镜头焦距</div>
+                        <div class="exif-value" id="exifLens">-</div>
+                    </div>
+                    <div class="exif-item">
+                        <div class="exif-label">光圈大小</div>
+                        <div class="exif-value" id="exifAperture">-</div>
+                    </div>
+                    <div class="exif-item">
+                        <div class="exif-label">快门速度</div>
+                        <div class="exif-value" id="exifShutter">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        let currentUserRole = 'guest'; 
-        let loginMethod = ''; 
-        let activePlatform = 'wechat';
-        let currentLoginMode = 'pwd'; 
-        let currentFilter = 'all';
-        let tempImgBase64 = null;
-        
-        // 核心运行锚点：当前正在编辑的目标作品ID（Null则代表处于发布模式）
-        let targetEditingPhotoId = null; 
+        // A. 分类筛选流控制
+        function filterCategory(category, element) {
+            // 切换 Tab 激活状态
+            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
 
-        const accountCredentials = {
-            wechat: { password: 'wx123', role: 'creator', name: '微信签约摄影师', bio: '独立摄影师。专注捕捉城市角落的微弱暗调、弱光美学与情绪切片。', avatar: '🟢' },
-            qq: { password: 'qq123', role: 'creator', name: 'QQ独立自由撰稿人', bio: '环球旅行家。已背包走过40个国家，热衷用 21:9 的宽映画幅记录世界荒野边界。', avatar: '🔵' },
-            developer: { password: 'admin123', role: 'admin', name: '系统高级开发者', bio: 'VISUALS 核心系统内核开发者。拥有本地最高级别系统全域数据篡改与编辑特权。', avatar: '👨‍💻' }
-        };
-
-        let photosData = [
-            { id: 1, title: '金色林海', topic: 'nature', ratio: 'ratio-21-9', ratioText: '21:9', exif: 'Hasselblad X2D · 38mm', author: '系统预设', src: '' },
-            { id: 2, title: '逆光情绪', topic: 'portrait', ratio: 'ratio-3-2', ratioText: '3:2', exif: 'Sony A7R5 · 85mm', author: '系统预设', src: '' }
-        ];
-
-        function handleGatekeeperClick() {
-            if(currentUserRole !== 'guest') {
-                currentUserRole = 'guest'; loginMethod = ''; applyPermissions(); showMainShowcase();
-            } else {
-                document.getElementById('loginOverlay').classList.add('active'); selectPlatform('wechat'); switchLoginMode('pwd');
-            }
-        }
-
-        function closeLoginModal() { document.getElementById('loginOverlay').classList.remove('active'); }
-
-        function selectPlatform(platform) {
-            activePlatform = platform;
-            document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('selected'));
-            const targetBtn = document.querySelector(`.platform-btn[data-type="${platform}"]`);
-            if(targetBtn) targetBtn.classList.add('selected');
-            
-            const target = accountCredentials[platform];
-            document.getElementById('passwordLabel').innerText = `${target.name}验证密码`;
-            document.getElementById('accountPasswordInput').value = '';
-            document.getElementById('accountPasswordInput').placeholder = `测试初始密码: ${target.password}`;
-        }
-
-        function switchLoginMode(mode) {
-            currentLoginMode = mode;
-            if(mode === 'pwd') {
-                document.getElementById('tabPwd').classList.add('active');
-                document.getElementById('tabCode').classList.remove('active');
-                document.getElementById('pwdFormZone').style.display = 'block';
-                document.getElementById('codeFormZone').style.display = 'none';
-            } else {
-                document.getElementById('tabPwd').classList.remove('active');
-                document.getElementById('tabCode').classList.add('active');
-                document.getElementById('pwdFormZone').style.display = 'none';
-                document.getElementById('codeFormZone').style.display = 'flex';
-            }
-        }
-
-        function verifyAccountPassword() {
-            const pwd = document.getElementById('accountPasswordInput').value.trim();
-            const valid = accountCredentials[activePlatform];
-            if(pwd === valid.password) {
-                executeLoginSuccess(valid);
-            } else {
-                alert('安全验证未通过，请检查该平台对应的专属密码！');
-            }
-        }
-
-        function simulateQrScan() {
-            const valid = accountCredentials[activePlatform];
-            executeLoginSuccess(valid);
-        }
-
-        function executeLoginSuccess(userConfig) {
-            currentUserRole = userConfig.role;
-            loginMethod = userConfig.name;
-            alert(`🎉 App 端口握手成功！欢迎进入 [${loginMethod}] 控制台。`);
-            closeLoginModal();
-            applyPermissions();
-            showMainShowcase();
-        }
-
-        // 核心特权渲染管道
-        function renderCoreGallery(targetData, container, isProfileView = false) {
-            container.innerHTML = '';
-            if(targetData.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:60px 0; font-size:13px; grid-column: 1 / -1;">暂无已发布的摄影资产。</div>`;
-                return;
-            }
-
-            targetData.forEach(photo => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-
-                // 判断高阶特权准入矩阵
-                let actionsHTML = '';
-                const isDeveloper = (currentUserRole === 'admin');
-                const isOwner = (currentUserRole === 'creator' && photo.author === loginMethod);
-
-                // 只要是最高开发者，或是作者本人，即可解锁完整的【编辑】与【下架】双特权组合
-                if (isDeveloper || isOwner) {
-                    actionsHTML = `
-                        <div class="action-group">
-                            <button class="action-btn btn-edit" onclick="openEditPhotoForm(${photo.id}, event)">📝 编辑</button>
-                            <button class="action-btn btn-delete" onclick="deletePhoto(${photo.id}, ${isProfileView}, event)">下架</button>
-                        </div>
-                    `;
+            // 执行过滤动画
+            document.querySelectorAll('.card-wrapper').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => { card.style.display = 'none'; }, 300);
                 }
-
-                const hasImg = photo.src && photo.src.length > 0;
-                item.innerHTML = `
-                    <div class="photo-wrapper ${photo.ratio}" onclick="triggerLightbox('${photo.src}', '${photo.title}', ${hasImg})">
-                        ${actionsHTML}
-                        <div class="photo-placeholder" style="display:${hasImg ? 'none' : 'flex'}">
-                            VISUALS <span>${photo.title} · ${photo.ratioText}</span>
-                        </div>
-                        <img src="${photo.src}" style="display:${hasImg ? 'block' : 'none'}">
-                    </div>
-                    <div class="photo-info">
-                        <div>
-                            <div class="photo-title">${photo.title}</div>
-                            <div class="photo-exif">${photo.exif}</div>
-                            <div class="photo-author-tag">By: ${photo.author}</div>
-                        </div>
-                        <div class="photo-ratio-tag">${photo.ratioText}</div>
-                    </div>
-                `;
-                container.appendChild(item);
             });
         }
 
-        function renderGallery() {
-            const list = photosData.filter(item => currentFilter === 'all' || item.topic === currentFilter);
-            renderCoreGallery(list, document.getElementById('galleryContainer'), false);
+        // B. 苹果式 3D 视差微动效核心计算
+        const wrappers = document.querySelectorAll('.card-wrapper');
+        wrappers.forEach(wrapper => {
+            wrapper.addEventListener('mousemove', (e) => {
+                const card = wrapper.querySelector('.card');
+                const box = wrapper.getBoundingClientRect();
+                const x = e.clientX - box.left - (box.width / 2);
+                const y = e.clientY - box.top - (box.height / 2);
+                
+                // 极度轻微的倾斜角度（正负2度），确保优雅不晃眼
+                card.style.transform = `rotateX(${-y / 15}deg) rotateY(${x / 15}deg)`;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                const card = wrapper.querySelector('.card');
+                card.style.transform = 'rotateX(0deg) rotateY(0deg) translateY(0px)';
+            });
+        });
+
+        // C. 膨胀弹窗流控制
+        function openLightbox(title, camera, lens, aperture, shutter, ratio, author, bigImgUrl) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalAuthor').innerText = `By: ${author}`;
+            document.getElementById('exifCamera').innerText = camera;
+            document.getElementById('exifLens').innerText = lens;
+            document.getElementById('exifAperture').innerText = aperture;
+            document.getElementById('exifShutter').innerText = shutter;
+            document.getElementById('modalImg').src = bigImgUrl;
+
+            document.getElementById('lightboxOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden'; // 阻止底层网页滚动
         }
 
-        function renderProfileGallery() {
-            const myList = photosData.filter(item => item.author === loginMethod);
-            renderCoreGallery(myList, document.getElementById('profileGalleryContainer'), true);
-        }
-
-        function applyPermissions() {
-            const badge = document.getElementById('roleBadge');
-            const uploadBtn = document.getElementById('openUploadBtn');
-            const loginBtn = document.getElementById('gatekeeperBtn');
-
-            if(currentUserRole === 'guest') {
-                badge.style.display = 'none'; uploadBtn.style.display = 'none';
-                loginBtn.innerText = "🔑 账户登录"; loginBtn.style.background = "var(--apple-blue)";
-            } else {
-                badge.style.display = 'block'; badge.innerText = `👤 ${loginMethod}个人中心`;
-                uploadBtn.style.display = 'block'; loginBtn.innerText = "退出账户";
-                loginBtn.style.background = "#2c2c2e";
-            }
-            renderGallery();
-        }
-
-        function showProfileSection() {
-            document.getElementById('mainShowcaseZone').style.display = 'none';
-            document.getElementById('profileSectionZone').style.display = 'block';
-            
-            const cred = accountCredentials[activePlatform];
-            document.getElementById('profAvatar').innerText = cred.avatar;
-            document.getElementById('profName').innerText = loginMethod;
-            document.getElementById('profRoleTag').innerText = `@${activePlatform}_authorized`;
-            document.getElementById('profBio').innerText = cred.bio;
-            
-            renderProfileGallery();
-        }
-
-        function showMainShowcase() {
-            document.getElementById('mainShowcaseZone').style.display = 'block';
-            document.getElementById('profileSectionZone').style.display = 'none';
-            renderGallery();
-        }
-
-        function handleFilterClick(btn, filterValue) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentFilter = filterValue;
-            renderGallery();
-        }
-
-        function openPwdModal() { document.getElementById('pwdModifyOverlay').classList.add('active'); }
-        function closePwdModal() { document.getElementById('pwdModifyOverlay').classList.remove('active'); }
-        function saveNewPassword() {
-            const val = document.getElementById('newPwdInput').value.trim();
-            if(val.length < 3) { alert('新设置的密码长度不能少于3位！'); return; }
-            accountCredentials[activePlatform].password = val;
-            alert(`【安全激活成功】该账户密码已重置为: ${val}`);
-            closePwdModal();
-        }
-
-        function openBioModal() { document.getElementById('bioModifyOverlay').classList.add('active'); }
-        function closeBioModal() { document.getElementById('bioModifyOverlay').classList.remove('active'); }
-        function saveNewBio() {
-            const val = document.getElementById('newBioInput').value.trim();
-            if(val) {
-                accountCredentials[activePlatform].bio = val;
-                document.getElementById('profBio').innerText = val;
-            }
-            closeBioModal();
-        }
-
-        /* --- 核心升级：多维特权数据编辑控制层 --- */
-        function openEditPhotoForm(id, event) {
-            event.stopPropagation(); // 阻止触发底层的灯箱大图预览
-            
-            // 抓取全站对应的照片原始对象
-            const targetPhoto = photosData.find(p => p.id === id);
-            if (!targetPhoto) return;
-
-            targetEditingPhotoId = id; // 将状态锚定为“当前正在编辑此图”
-            
-            // 1. 改变弹窗文本UI状态
-            document.getElementById('uploadPanelTitle').innerText = `管理并编辑作品数据 (发布者: ${targetPhoto.author})`;
-            document.getElementById('publishCommitBtn').innerText = "保存并更新作品资产";
-
-            // 2. 注入历史缓存数据
-            document.getElementById('photoTitle').value = targetPhoto.title;
-            document.getElementById('photoExif').value = targetPhoto.exif;
-            document.getElementById('photoTopic').value = targetPhoto.topic;
-            document.getElementById('photoRatio').value = targetPhoto.ratio;
-
-            const dz = document.getElementById('dropZone');
-            if (targetPhoto.src) {
-                tempImgBase64 = targetPhoto.src;
-                dz.style.background = `url(${tempImgBase64})`;
-                dz.style.backgroundSize = "cover";
-                document.getElementById('dropZoneText').innerText = "可点击重新替换图片资产";
-            } else {
-                tempImgBase64 = null;
-                dz.style.background = 'none';
-                document.getElementById('dropZoneText').innerText = "点击选择或拖拽本地图片文件";
-            }
-
-            // 3. 唤醒控制弹窗
-            document.getElementById('uploadOverlay').classList.add('active');
-        }
-
-        function openUpload() {
-            targetEditingPhotoId = null; // 重置归零，确认为“纯新图发布模式”
-            tempImgBase64 = null;
-            document.getElementById('uploadPanelTitle').innerText = "发布全新摄影资产";
-            document.getElementById('publishCommitBtn').innerText = "确认推流发布";
-            document.getElementById('photoTitle').value = ''; 
-            document.getElementById('photoExif').value = '';
-            document.getElementById('dropZone').style.background = 'none';
-            document.getElementById('dropZoneText').innerText = "点击选择或拖拽本地图片文件";
-            document.getElementById('uploadOverlay').classList.add('active');
-        }
-
-        function closeUploadModal() { document.getElementById('uploadOverlay').classList.remove('active'); }
-        function triggerFileInput() { document.getElementById('fileInput').click(); }
-        
-        function handleFileSelect() {
-            const file = document.getElementById('fileInput').files[0];
-            if(file) {
-                const r = new FileReader();
-                r.onload = (e) => { 
-                    tempImgBase64 = e.target.result; 
-                    const dz = document.getElementById('dropZone');
-                    dz.style.background = `url(${tempImgBase64})`; 
-                    dz.style.backgroundSize = "cover"; 
-                    document.getElementById('dropZoneText').innerText = "图片已装载就绪"; 
-                };
-                r.readAsDataURL(file);
+        function closeLightbox(event, force = false) {
+            if (force || event.target.classList.contains('modal-overlay')) {
+                document.getElementById('lightboxOverlay').classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
         }
-
-        // 执行推流发布或高级覆盖修改
-        function executePublish() {
-            const title = document.getElementById('photoTitle').value.trim() || '未命名资产';
-            const exif = document.getElementById('photoExif').value.trim() || '未知摄影器材';
-            const topic = document.getElementById('photoTopic').value;
-            const ratio = document.getElementById('photoRatio').value;
-            const ratioText = document.getElementById('photoRatio').options[document.getElementById('photoRatio').selectedIndex].text.split(' ')[0];
-
-            if (targetEditingPhotoId !== null) {
-                // 【A形态：特权编辑重写模式】
-                const index = photosData.findIndex(p => p.id === targetEditingPhotoId);
-                if (index !== -1) {
-                    photosData[index].title = title;
-                    photosData[index].exif = exif;
-                    photosData[index].topic = topic;
-                    photosData[index].ratio = ratio;
-                    photosData[index].ratioText = ratioText;
-                    if (tempImgBase64) {
-                        photosData[index].src = tempImgBase64;
-                    }
-                    alert('🎉 资产重组成功！该摄影元数据已被特权覆写同步。');
-                }
-            } else {
-                // 【B形态：全新发布推流模式】
-                photosData.unshift({ 
-                    id: Date.now(), 
-                    title, 
-                    topic, 
-                    ratio, 
-                    ratioText, 
-                    exif, 
-                    author: loginMethod, 
-                    src: tempImgBase64 || '' 
-                });
-                alert('🎉 发布成功！新作品已推流至流媒体公共大厅。');
-            }
-
-            closeUploadModal();
-            // 视图刷新
-            document.getElementById('profileSectionZone').style.display === 'block' ? renderProfileGallery() : renderGallery();
-        }
-
-        function deletePhoto(id, isProfile, event) {
-            event.stopPropagation();
-            if(confirm('警告：确定要彻底销毁下架该流媒体摄影资产吗？')) {
-                photosData = photosData.filter(p => p.id !== id);
-                isProfile ? renderProfileGallery() : renderGallery();
-            }
-        }
-
-        function triggerLightbox(src, title, hasImg) {
-            if(!hasImg) {
-                alert(`《${title}》目前为虚拟渲染色块。你可以先登录账号，点击“发布作品”或点击卡片上的“📝 编辑”上传一张真正的本地图片文件，之后就能点击看大图预览了！`);
-                return;
-            }
-            document.getElementById('lightboxImg').src = src;
-            document.getElementById('lightbox').classList.add('active');
-        }
-        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
-
-        renderGallery();
     </script>
 </body>
 </html>
