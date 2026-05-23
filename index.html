@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VISUALS HUB - 光影的轮廓</title>
+    <title>VISUALS HUB - 终极基准版 2.1</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
     <style>
         /* --- 1. 全局样式与 Apple 变量定义 --- */
@@ -14,6 +14,7 @@
             --text-secondary: #86868b;
             --border-color: rgba(255, 255, 255, 0.08);
             --apple-blue: #0071e3;
+            --apple-red: #ff3b30;
             --nav-bg: rgba(0, 0, 0, 0.7);
         }
 
@@ -39,43 +40,114 @@
         .nav-btn:hover { background: var(--text-color); color: var(--bg-color); }
         .nav-btn.primary { background: var(--apple-blue); color: #fff; border: none; }
 
-        /* --- 3. 首屏内容与分类标签 --- */
+        /* --- 3. 首屏内容与常驻控制面板 --- */
         .hero { text-align: center; padding: 40px 20px 20px; max-width: 800px; margin: 0 auto; }
         .hero h1 { font-size: 40px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.5px; }
-        .categories { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+        
+        .inline-login-panel { background: var(--card-bg); border: 0.5px solid var(--border-color); border-radius: 16px; padding: 15px 25px; margin: 20px auto; max-width: 450px; display: flex; align-items: center; gap: 10px; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .inline-login-panel input { flex: 1; padding: 8px 12px; background: rgba(128,128,128,0.08); border: 0.5px solid var(--border-color); border-radius: 8px; color: var(--text-color); font-size: 13px; }
+        
+        .categories { display: flex; justify-content: center; gap: 10px; margin: 25px 0 10px; flex-wrap: wrap; }
         .tab { padding: 6px 16px; background: rgba(128,128,128,0.1); border-radius: 15px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
         .tab.active, .tab:hover { background: var(--text-color); color: var(--bg-color); }
 
-        /* --- 4. 瀑布流/网格图片大厅（响应式） --- */
+        /* --- 4. 瀑布流网格布局 --- */
         .gallery-grid { max-width: 1400px; margin: 0 auto; padding: 0 40px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; perspective: 1000px; }
-        .card-wrapper { transform-style: preserve-3d; transition: transform 0.1s; }
-        .card { background: var(--card-bg); border-radius: 18px; overflow: hidden; border: 0.5px solid var(--border-color); cursor: pointer; position: relative; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        .img-box { width: 100%; aspect-ratio: 3/2; background: #333; overflow: hidden; position: relative; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+        .card-wrapper { transform-style: preserve-3d; transition: transform 0.1s; position: relative; }
+        .card { background: var(--card-bg); border-radius: 18px; overflow: hidden; border: 0.5px solid var(--border-color); cursor: pointer; position: relative; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); height: 100%; }
+        .img-box { width: 100%; aspect-ratio: 3/2; background: #222; overflow: hidden; position: relative; transition: aspect-ratio 0.3s; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s, filter 0.3s; }
         .card:hover .img-box img { transform: scale(1.04); }
         .card-info { padding: 16px; }
         .card-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
         .card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; color: var(--text-secondary); }
-        .like-btn { color: #ff3b30; cursor: pointer; font-weight: 600; }
+        .like-btn { color: var(--apple-red); cursor: pointer; font-weight: 600; }
 
-        /* --- 5. 弹窗系统（上传、详情、账户） --- */
+        /* 🟢🔴 站长 Mac 风液态流光快捷果冻圆点系统 */
+        .admin-controls { position: absolute; top: 14px; left: 14px; display: none; gap: 8px; z-index: 15; opacity: 0; transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+        
+        /* 当鼠标滑入整个卡片区域时，圆点平滑浮现 */
+        .card-wrapper:hover .admin-controls { opacity: 1; }
+
+        .fluid-dot-btn { 
+            width: 13px; 
+            height: 13px; 
+            border-radius: 50%; 
+            position: relative; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 0px; /* 平常隐藏内部字符 */
+            color: rgba(0,0,0,0.7);
+            font-weight: bold;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+            border: 0.5px solid rgba(0, 0, 0, 0.15);
+            /* 注入 Apple 经典的流体原色液体滤镜与微光 */
+            background-size: 200% 200%;
+            animation: fluidLiquidWave 4s ease infinite;
+        }
+
+        /* 🔴 下架清算圆点：Mac 关闭级高奢液体红 */
+        .fluid-dot-btn.del {
+            background-image: linear-gradient(135deg, #ff5f56, #ff3b30, #ff2d55);
+            box-shadow: 0 1px 2px rgba(255,59,48,0.3), inset 0 0.5px 1px rgba(255,255,255,0.5);
+        }
+        /* 🟢 调色编辑器圆点：Mac 全屏级高奢液体绿 */
+        .fluid-dot-btn.edit {
+            background-image: linear-gradient(135deg, #28c940, #34c759, #00d2c4);
+            box-shadow: 0 1px 2px rgba(52,199,89,0.3), inset 0 0.5px 1px rgba(255,255,255,0.5);
+        }
+
+        /* 🌊 当鼠标精准移入每一个小圆点时的流体放大膨胀与符号显化交互 */
+        .fluid-dot-btn:hover {
+            transform: scale(1.35);
+            font-size: 9px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            color: #fff;
+        }
+        .fluid-dot-btn.del:hover { color: #5c0000; }
+        .fluid-dot-btn.edit:hover { color: #004d00; }
+
+        /* 液体流光无限循环动画 */
+        @keyframes fluidLiquidWave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 5. 拖拽发布盒子 --- */
+        .drop-zone { border: 2px dashed var(--border-color); border-radius: 14px; padding: 30px; text-align: center; background: rgba(128,128,128,0.03); cursor: pointer; transition: all 0.2s; margin-bottom: 15px; color: var(--text-secondary); font-size: 13px; }
+        .drop-zone.dragover { border-color: var(--apple-blue); background: rgba(0, 113, 227, 0.05); color: var(--apple-blue); }
+        .upload-divider { text-align: center; margin: 10px 0; color: var(--text-secondary); font-size: 12px; position: relative; }
+        .upload-divider::before { content:''; position:absolute; left:0; top:50%; width:40%; border-bottom:0.5px solid var(--border-color); }
+        .upload-divider::after { content:''; position:absolute; right:0; top:50%; width:40%; border-bottom:0.5px solid var(--border-color); }
+
+        /* 滤镜效果定义 */
+        .filter-normal { filter: none; }
+        .filter-vivid { filter: saturate(1.4) contrast(1.1); }
+        .filter-dramatic { filter: contrast(1.3) brightness(0.95); }
+        .filter-mono { filter: grayscale(1) contrast(1.2); }
+
+        /* --- 6. 弹出窗口核心组件 --- */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; justify-content: center; align-items: center; z-index: 200; padding: 20px; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--card-bg); width: 100%; max-width: 650px; border-radius: 24px; border: 0.5px solid var(--border-color); padding: 30px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card-bg); width: 100%; max-width: 600px; border-radius: 24px; border: 0.5px solid var(--border-color); padding: 30px; position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-color); font-size: 18px; cursor: pointer; }
-        
-        form input, form select, form textarea { width: 100%; padding: 10px; background: rgba(128,128,128,0.1); border: 0.5px solid var(--border-color); border-radius: 8px; color: var(--text-color); margin-bottom: 15px; font-family: inherit; }
+        form input, form select, form textarea { width: 100%; padding: 10px; background: rgba(128,128,128,0.1); border: 0.5px solid var(--border-color); border-radius: 8px; color: var(--text-color); margin-bottom: 12px; font-family: inherit; font-size: 14px; }
         .comment-section { margin-top: 20px; border-top: 0.5px solid var(--border-color); padding-top: 15px; }
         .comment-list { max-height: 150px; overflow-y: auto; margin-bottom: 10px; font-size: 13px; }
         .comment-item { margin-bottom: 6px; color: var(--text-secondary); }
         .comment-item strong { color: var(--text-color); }
 
-        /* --- 6. 响应式优化 --- */
+        .filter-options { display: flex; gap: 10px; margin: 15px 0; }
+        .filter-opt { flex: 1; padding: 10px; border-radius: 8px; background: rgba(128,128,128,0.1); text-align: center; font-size: 12px; cursor: pointer; border: 1px solid transparent; }
+        .filter-opt.active { border-color: var(--apple-blue); background: rgba(0,113,227,0.1); }
+
         @media (max-width: 768px) {
             header { padding: 0 15px; }
-            .search-bar-container { display: none; } /* 移动端隐藏搜索框简化布局 */
+            .search-bar-container { display: none; }
             .gallery-grid { grid-template-columns: 1fr; padding: 0 15px; }
-            .hero h1 { font-size: 28px; }
         }
     </style>
 </head>
@@ -84,23 +156,32 @@
     <header>
         <div class="logo">VISUALS HUB</div>
         <div class="search-bar-container">
-            <input type="text" class="search-bar" id="searchInp" placeholder="搜索关键词、设备、颜色..." oninput="handleSearch()">
+            <input type="text" class="search-bar" id="searchInp" placeholder="搜索关键词、设备、滤镜..." oninput="handleSearch()">
         </div>
         <div class="nav-right">
-            <button class="nav-btn" onclick="toggleTheme()" id="themeBtn">🌓 切换主题</button>
+            <button class="nav-btn" onclick="toggleTheme()">🌓 主题切换</button>
             <button class="nav-btn primary" onclick="openModal('uploadModal')">+ 发布作品</button>
-            <button class="nav-btn" onclick="openModal('accountModal')" id="userBtn">👤 账户/后台</button>
         </div>
     </header>
 
     <section class="hero">
-        <h1 id="seoTitle">纵览光影视界</h1>
-        <p>个性化推荐与敏捷互动的下一代视觉艺术平台。支持多维高级检索、版权保护声明与响应式无缝编辑流。</p>
-        <div class="categories" id="tabsBox">
-            <div class="tab active" onclick="switchCategory('all')">全部推荐</div>
-            <div class="tab" onclick="switchCategory('自然')">自然</div>
+        <h1>光影的轮廓</h1>
+        <p>支持多维检索的高级摄影平台。当前身份：<span id="roleBadge" style="color:var(--apple-blue); font-weight:600;">访客游客</span></p>
+        
+        <div class="inline-login-panel" id="loginPanel">
+            <input type="password" id="passInp" placeholder="输入站长口令 (测试密码: admin)">
+            <button class="nav-btn primary" style="margin:0; padding:8px 16px;" onclick="performLogin()">验证解锁</button>
+        </div>
+        <div class="inline-login-panel" id="logoutPanel" style="display:none; background:rgba(255,59,48,0.05); border-color:rgba(255,59,48,0.2)">
+            <span style="font-size:13px; color:var(--apple-red)">⚡ 您已成功解锁最高管理权限</span>
+            <button class="nav-btn" style="margin:0; padding:6px 12px; color:var(--apple-red)" onclick="performLogout()">下线退出</button>
+        </div>
+
+        <div class="categories">
+            <div class="tab active" onclick="switchCategory('all')">全部作品</div>
             <div class="tab" onclick="switchCategory('人像')">人像</div>
-            <div class="tab" onclick="switchCategory('美食')">美食</div>
+            <div class="tab" onclick="switchCategory('自然')">自然</div>
+            <div class="tab" onclick="switchCategory('Cosplay')">Cosplay</div>
         </div>
     </section>
 
@@ -109,72 +190,95 @@
     <div class="modal" id="uploadModal" onclick="closeModal(event, 'uploadModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-btn" onclick="document.getElementById('uploadModal').classList.remove('active')">✕</button>
-            <h3 style="margin-bottom: 15px;">+ 上传新视觉作品</h3>
+            <h3 style="margin-bottom: 15px;">+ 发布新视觉作品</h3>
+            
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInp').click()">
+                <div>📥 将本地图片拖拽至此，或 <strong>点击选择文件</strong></div>
+                <div id="fileStatus" style="font-size:11px; margin-top:5px; color:var(--apple-blue)"></div>
+            </div>
+            <input type="file" id="fileInp" accept="image/*" style="display:none;" onchange="handleFileSelect(this)">
+            
+            <div class="upload-divider">或者使用网络资源</div>
+
             <form id="uploadForm" onsubmit="handleUpload(event)">
-                <label>输入图片URL链接 (或直接粘贴网络图片地址)：</label>
-                <input type="url" id="imgUrl" required placeholder="https://example.com/photo.jpg">
-                <input type="text" id="imgTitle" required placeholder="作品标题">
+                <input type="url" id="imgUrl" placeholder="输入图片 URL 外部网络地址...">
+                <input type="text" id="imgTitle" required placeholder="给予这幅光影一个标题">
                 <select id="imgCat">
                     <option value="自然">自然</option>
                     <option value="人像">人像</option>
-                    <option value="美食">美食</option>
+                    <option value="Cosplay">Cosplay</option>
                 </select>
-                <input type="text" id="imgDevice" placeholder="拍摄设备 (例如: Hasselblad X2D)">
-                <textarea id="imgDesc" placeholder="输入版权声明、作品描述或故事背后的故事..." rows="3"></textarea>
-                <button type="submit" class="nav-btn primary" style="width: 100%; padding: 12px;">提交审核并同步发布</button>
+                <input type="text" id="imgDevice" placeholder="拍摄硬件设备 (如: Hasselblad X2D, Sony A7R5)">
+                <textarea id="imgDesc" placeholder="输入你想诉说的作品创作背景、SEO 关键词及版权归属..." rows="2"></textarea>
+                <button type="submit" class="nav-btn primary" style="width: 100%; padding: 12px; border-radius:10px;">发布至全网大厅</button>
             </form>
         </div>
     </div>
 
     <div class="modal" id="detailModal" onclick="closeModal(event, 'detailModal')">
-        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 800px;">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 750px;">
             <button class="close-btn" onclick="document.getElementById('detailModal').classList.remove('active')">✕</button>
-            <div class="img-box" style="aspect-ratio: auto; max-height: 50vh; background: #000; border-radius: 12px;">
-                <img id="detImg" src="" style="object-fit: contain;">
+            <div class="img-box" style="aspect-ratio: auto; max-height: 50vh; background: #000; border-radius: 12px;" id="detImgBox">
+                <img id="detImg" src="">
             </div>
-            <h2 id="detTitle" style="margin: 15px 0 5px;">标题</h2>
-            <p id="detDesc" style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">描述</p>
-            
-            <div style="background: rgba(128,128,128,0.1); padding: 15px; border-radius: 12px; font-size: 13px; line-height: 1.6;">
-                <div>📷 <strong>拍摄设备:</strong> <span id="detDevice">-</span></div>
-                <div>🛡️ <strong>版权状态:</strong> 原创内容·保留所有权利 (符合SEO及内容管理合规规范)</div>
+            <h2 id="detTitle" style="margin: 15px 0 5px;">作品名</h2>
+            <p id="detDesc" style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;"></p>
+            <div style="background: rgba(128,128,128,0.08); padding: 12px; border-radius: 10px; font-size: 13px;">
+                <div>📷 <strong>相机工艺:</strong> <span id="detDevice">-</span></div>
             </div>
-
             <div class="comment-section">
-                <h4>互动讨论区 (<span id="detCommCount">0</span>)</h4>
+                <h4>讨论社区 (<span id="detCommCount">0</span>)</h4>
                 <div class="comment-list" id="commListBox"></div>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="commInp" placeholder="发表公开合规评论..." style="margin: 0; flex: 1;">
-                    <button class="nav-btn primary" onclick="submitComment()">发送</button>
+                    <input type="text" id="commInp" placeholder="写下你的共鸣评论..." style="margin: 0; flex: 1;">
+                    <button class="nav-btn primary" onclick="submitComment()">寄送</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="accountModal" onclick="closeModal(event, 'accountModal')">
+    <div class="modal" id="editModal" onclick="closeModal(event, 'editModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="document.getElementById('accountModal').classList.remove('active')">✕</button>
-            <h3>👤 高级站长中心 & 内容安全审计后台</h3>
-            <p style="color: var(--text-secondary); font-size: 13px; margin: 10px 0 20px;">当前登录：Administrator (高级权限)</p>
+            <button class="close-btn" onclick="document.getElementById('editModal').classList.remove('active')">✕</button>
+            <h3 style="margin-bottom: 15px;">🎨 图像高级微调与剪裁</h3>
+            <div style="text-align:center; background:#000; padding:10px; border-radius:12px;">
+                <div id="editPreviewBox" style="width:100%; aspect-ratio:3/2; overflow:hidden;">
+                    <img id="editImgPreview" src="" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+            </div>
             
-            <h4 style="margin-bottom: 10px;">🛡️ 批量全站内容管理（点击直接下架删除）</h4>
-            <div id="adminList" style="max-height: 250px; overflow-y: auto; border: 0.5px solid var(--border-color); border-radius: 8px; padding: 10px;"></div>
+            <h4 style="margin-top:15px; font-size:14px;">选择色彩滤镜风格：</h4>
+            <div class="filter-options">
+                <div class="filter-opt" id="f-normal" onclick="applyEditorFilter('normal')">原彩</div>
+                <div class="filter-opt" id="f-vivid" onclick="applyEditorFilter('vivid')">鲜明</div>
+                <div class="filter-opt" id="f-dramatic" onclick="applyEditorFilter('dramatic')">反差色</div>
+                <div class="filter-opt" id="f-mono" onclick="applyEditorFilter('mono')">黑白</div>
+            </div>
+
+            <h4 style="font-size:14px;">重新规划画幅比例：</h4>
+            <select id="editRatio" onchange="applyEditorRatio(this.value)">
+                <option value="3/2">经典 3:2 画幅</option>
+                <option value="16/9">电影感 16:9 画幅</option>
+                <option value="21/9">宽荧幕 21:9 极客画幅</option>
+            </select>
+
+            <button class="nav-btn primary" style="width:100%; padding:12px; margin-top:10px;" onclick="saveImageEdits()">确认并保存样貌</button>
         </div>
     </div>
 
     <script>
-        // A. 初始化核心内置种子数据 (保留之前的作品并充实新数据)
         const defaultImages = [
-            { id: 1, title: "金色林海", cat: "自然", device: "Hasselblad X2D", desc: "捕捉于深秋日落时分，阳光穿透树冠形成的纯金屏障。", likes: 142, src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80", comments: [{user:"摄影师小张", text:"这个金色调调调得太绝了！"}, {user:"AI系统", text:"符合黄金分割构图"}] },
-            { id: 2, title: "逆光情绪", cat: "人像", device: "Sony A7R5", desc: "侧逆光影勾勒出情绪的张力，高像素细节毕现。", likes: 98, src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", comments: [] },
-            { id: 3, title: "高奢法式甜品", cat: "美食", device: "Canon R5", desc: "微距视角下的米其林甜品层叠逻辑。", likes: 64, src: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80", comments: [] }
+            { id: 1, title: "金色林海", cat: "自然", device: "Hasselblad X2D", desc: "深秋日光漫射树冠形成的绝对金色屏障。", likes: 142, src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80", comments: [], filter: "normal", ratio: "21/9" },
+            { id: 2, title: "逆光情绪", cat: "人像", device: "Sony A7R5", desc: "逆光细微颗粒展现的情绪艺术。", likes: 98, src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", comments: [], filter: "normal", ratio: "3/2" }
         ];
 
-        let db = JSON.parse(localStorage.getItem('visuals_db')) || defaultImages;
+        let db = JSON.parse(localStorage.getItem('v4_db')) || defaultImages;
+        let isAdmin = sessionStorage.getItem('v4_admin') === 'true';
         let currentImgId = null;
         let activeCategory = 'all';
+        let uploadedBase64 = "";
 
-        // B. 渲染画廊核心大厅控制 (融合3D动效计算)
+        // A. 渲染核心网格
         function renderGallery(data = db) {
             const gridBox = document.getElementById('gridBox');
             gridBox.innerHTML = '';
@@ -183,142 +287,136 @@
                 const wrap = document.createElement('div');
                 wrap.className = 'card-wrapper';
                 wrap.innerHTML = `
+                    <div class="admin-controls" style="display: ${isAdmin ? 'flex' : 'none'}">
+                        <div class="fluid-dot-btn del" title="作品直接下架" onclick="quickDelete(event, ${item.id})">✕</div>
+                        <div class="fluid-dot-btn edit" title="专属色彩微调" onclick="openEditor(event, ${item.id})">⚙️</div>
+                    </div>
                     <div class="card" onclick="openDetail(${item.id})">
-                        <div class="img-box"><img src="${item.src}" alt="${item.title}" loading="lazy"></div>
+                        <div class="img-box" style="aspect-ratio: ${item.ratio || '3/2'}">
+                            <img src="${item.src}" class="filter-${item.filter || 'normal'}" alt="${item.title}" loading="lazy">
+                        </div>
                         <div class="card-info">
                             <div class="card-title">${item.title}</div>
-                            <div style="font-size:12px; color:var(--text-secondary)">标签: ${item.cat} | 设备: ${item.device || '未知'}</div>
+                            <div style="font-size:12px; color:var(--text-secondary)">${item.cat} | ${item.device}</div>
                             <div class="card-actions">
                                 <span class="like-btn" onclick="handleLike(event, ${item.id})">❤️ <span id="like-count-${item.id}">${item.likes}</span></span>
-                                <span>💬 ${item.comments.length} 条互动</span>
+                                <span>💬 ${item.comments.length}</span>
                             </div>
                         </div>
                     </div>
                 `;
-                // 挂载苹果式 3D 视差单张卡片计算
+                
+                // 3D 悬浮视差
                 wrap.addEventListener('mousemove', (e) => {
                     const card = wrap.querySelector('.card');
                     const box = wrap.getBoundingClientRect();
-                    card.style.transform = `rotateX(${- (e.clientY - box.top - box.height/2) / 15}deg) rotateY(${(e.clientX - box.left - box.width/2) / 15}deg)`;
+                    card.style.transform = `rotateX(${- (e.clientY - box.top - box.height/2) / 18}deg) rotateY(${(e.clientX - box.left - box.width/2) / 18}deg)`;
                 });
-                wrap.addEventListener('mouseleave', () => {
-                    wrap.querySelector('.card').style.transform = 'rotateX(0deg) rotateY(0deg)';
-                });
+                wrap.addEventListener('mouseleave', () => { wrap.querySelector('.card').style.transform = 'rotateX(0deg) rotateY(0deg)'; });
                 gridBox.appendChild(wrap);
             });
             saveDB();
-            renderAdminBackend();
+            updateLoginUI();
         }
 
-        // C. 多维高敏模糊搜索功能
-        function handleSearch() {
-            const val = document.getElementById('searchInp').value.toLowerCase();
-            const filtered = db.filter(item => 
-                item.title.toLowerCase().includes(val) || 
-                item.cat.toLowerCase().includes(val) || 
-                item.device.toLowerCase().includes(val) ||
-                item.desc.toLowerCase().includes(val)
-            );
-            renderGallery(filtered);
-        }
-
-        // D. 类属标签页切换切换
-        function switchCategory(cat) {
-            activeCategory = cat;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            if(cat === 'all') { renderGallery(); } 
-            else { renderGallery(db.filter(i => i.cat === cat)); }
-        }
-
-        // E. 互动机制：独立点赞
-        function handleLike(e, id) {
-            e.stopPropagation();
-            const target = db.find(i => i.id === id);
-            if(target) {
-                target.likes++;
-                document.getElementById(`like-count-${id}`).innerText = target.likes;
-                saveDB();
+        // B. 极速登录鉴权器
+        function performLogin() {
+            const pass = document.getElementById('passInp').value;
+            if(pass === 'admin') {
+                isAdmin = true;
+                sessionStorage.setItem('v4_admin', 'true');
+                document.getElementById('passInp').value = '';
+                renderGallery();
+            } else {
+                alert('口令错漏，未被授予管理及微调权限。');
             }
         }
 
-        // F. 深度详情视窗控制（高斯模糊弹窗）
-        function openDetail(id) {
-            const target = db.find(i => i.id === id);
-            if(!target) return;
-            currentImgId = id;
-            document.getElementById('detImg').src = target.src;
-            document.getElementById('detTitle').innerText = target.title;
-            document.getElementById('detDesc').innerText = target.desc || '主创团队暂未添加补充版权及设计描述。';
-            document.getElementById('detDevice').innerText = target.device || '未录入专业摄影设备';
-            document.getElementById('detCommCount').innerText = target.comments.length;
-            
-            const commBox = document.getElementById('commListBox');
-            commBox.innerHTML = target.comments.map(c => `<div class="comment-item"><strong>${c.user}:</strong> ${c.text}</div>`).join('');
-            openModal('detailModal');
-        }
-
-        function submitComment() {
-            const txt = document.getElementById('commInp').value.trim();
-            if(!txt) return;
-            const target = db.find(i => i.id === currentImgId);
-            target.comments.push({ user: "匿名访客", text: txt });
-            document.getElementById('commInp').value = '';
-            openDetail(currentImgId); // 刷新局部视图
+        function performLogout() {
+            isAdmin = false;
+            sessionStorage.removeItem('v4_admin');
             renderGallery();
         }
 
-        // G. 全新图片上传发布及合规审核流
+        function updateLoginUI() {
+            document.getElementById('roleBadge').innerText = isAdmin ? "最高站长权限开发人员" : "普通访客游客";
+            document.getElementById('roleBadge').style.color = isAdmin ? "var(--apple-red)" : "var(--apple-blue)";
+            
+            document.getElementById('loginPanel').style.display = isAdmin ? 'none' : 'flex';
+            document.getElementById('logoutPanel').style.display = isAdmin ? 'flex' : 'none';
+        }
+
+        // C. 拖拽接收机制
+        const dropZone = document.getElementById('dropZone');
+        ['dragenter', 'dragover'].forEach(n => dropZone.addEventListener(n, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }));
+        ['dragleave', 'drop'].forEach(n => dropZone.addEventListener(n, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }));
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); const files = e.dataTransfer.files; if(files.length) processFile(files[0]); });
+        function handleFileSelect(inp) { if(inp.files.length) processFile(inp.files[0]); }
+        function processFile(file) {
+            if(!file.type.startsWith('image/')) return;
+            const r = new FileReader();
+            r.onload = (e) => {
+                uploadedBase64 = e.target.result;
+                document.getElementById('fileStatus').innerText = `已载入本地物理图像: ${file.name}`;
+                document.getElementById('imgUrl').disabled = true;
+            };
+            r.readAsDataURL(file);
+        }
+
+        // D. 交互与编辑控制器
         function handleUpload(e) {
             e.preventDefault();
-            const newPhoto = {
-                id: Date.now(),
-                title: document.getElementById('imgTitle').value,
-                cat: document.getElementById('imgCat').value,
-                device: document.getElementById('imgDevice').value || "未知设备",
-                desc: document.getElementById('imgDesc').value,
-                likes: 0,
-                src: document.getElementById('imgUrl').value,
-                comments: []
-            };
-            db.unshift(newPhoto); // 置顶推荐
+            const src = uploadedBase64 || document.getElementById('imgUrl').value;
+            if(!src) return alert("请投入本地拖拽图片或填入有效的网络图片资源链接！");
+            db.unshift({
+                id: Date.now(), title: document.getElementById('imgTitle').value, cat: document.getElementById('imgCat').value,
+                device: document.getElementById('imgDevice').value || "未知媒介", desc: document.getElementById('imgDesc').value,
+                likes: 0, src: src, comments: [], filter: "normal", ratio: "3/2"
+            });
             document.getElementById('uploadForm').reset();
+            uploadedBase64 = ""; document.getElementById('fileStatus').innerText = "";
+            document.getElementById('imgUrl').disabled = false;
             document.getElementById('uploadModal').classList.remove('active');
             renderGallery();
-            alert("✨ 上传成功！内容已安全通过自动化AI合规审查，已同步上架全球数字大厅。");
         }
 
-        // H. 管理员权限及内容管理中心控制
-        function renderAdminBackend() {
-            const box = document.getElementById('adminList');
-            box.innerHTML = db.map(item => `
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:8px; background:rgba(128,128,128,0.05); padding:6px; border-radius:6px;">
-                    <span>🎬 ${item.title} (${item.cat})</span>
-                    <button class="nav-btn" style="padding:2px 8px; color:#ff3b30" onclick="deletePhoto(${item.id})">下架注销</button>
-                </div>
-            `).join('');
+        function openEditor(e, id) {
+            e.stopPropagation(); const target = db.find(i => i.id === id); if(!target) return;
+            currentImgId = id; tempEditFilter = target.filter || "normal";
+            document.getElementById('editImgPreview').src = target.src;
+            document.getElementById('editRatio').value = target.ratio || "3/2";
+            applyEditorRatio(target.ratio || "3/2"); applyEditorFilter(tempEditFilter);
+            openModal('editModal');
         }
+        function applyEditorFilter(f) { tempEditFilter = f; document.querySelectorAll('.filter-opt').forEach(o => o.classList.remove('active')); document.getElementById(`f-${f}`).classList.add('active'); document.getElementById('editImgPreview').className = `filter-${f}`; }
+        function applyEditorRatio(r) { document.getElementById('editPreviewBox').style.aspectRatio = r; }
+        function saveImageEdits() { const t = db.find(i => i.id === currentImgId); if(t) { t.filter = tempEditFilter; t.ratio = document.getElementById('editRatio').value; document.getElementById('editModal').classList.remove('active'); renderGallery(); } }
 
-        function deletePhoto(id) {
-            if(confirm("确定要对该作品执行全网下架及版权注销清算吗？")) {
-                db = db.filter(i => i.id !== id);
-                renderGallery();
-            }
-        }
-
-        // I. 界面主题自由切换（暗色 / 浅色极简）
-        function toggleTheme() {
-            const current = document.body.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', next);
-        }
-
-        // 工具级状态控制
+        // 基础公共控制流
+        function quickDelete(e, id) { e.stopPropagation(); if(confirm('确定要全网直接下架此作品吗？')) { db = db.filter(i => i.id !== id); renderGallery(); } }
+        function handleLike(e, id) { e.stopPropagation(); const t = db.find(i => i.id === id); if(t) { t.likes++; document.getElementById(`like-count-${id}`).innerText = t.likes; saveDB(); } }
+        function handleSearch() { const val = document.getElementById('searchInp').value.toLowerCase(); renderGallery(db.filter(i => i.title.toLowerCase().includes(val) || i.cat.toLowerCase().includes(val) || i.device.toLowerCase().includes(val))); }
+        function switchCategory(cat) { activeCategory = cat; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); event.target.classList.add('active'); renderGallery(cat === 'all' ? db : db.filter(i => i.cat === cat)); }
+        function saveDB() { localStorage.setItem('v4_db', JSON.stringify(db)); }
+        function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(e, id) { if(e.target.id === id) document.getElementById(id).classList.remove('active'); }
-        function saveDB() { localStorage.setItem('visuals_db', JSON.stringify(db)); }
+        function openDetail(id) {
+            const t = db.find(i => i.id === id); if(!t) return; currentImgId = id;
+            document.getElementById('detImg').src = t.src; document.getElementById('detImg').className = `filter-${t.filter || 'normal'}`;
+            document.getElementById('detImgBox').style.aspectRatio = t.ratio || '3/2'; document.getElementById('detTitle').innerText = t.title;
+            document.getElementById('detDesc').innerText = t.desc || '主创团队未附加额外的创作故事线。'; document.getElementById('detDevice').innerText = t.device;
+            document.getElementById('detCommCount').innerText = t.comments.length;
+            document.getElementById('commListBox').innerHTML = t.comments.map(c => `<div class="comment-item"><strong>${c.user}:</strong> ${c.text}</div>`).join('');
+            openModal('detailModal');
+        }
+        function submitComment() {
+            const txt = document.getElementById('commInp').value.trim(); if(!txt) return;
+            db.find(i => i.id === currentImgId).comments.push({ user: isAdmin ? "最高站长Admin" : "访客群体", text: txt });
+            document.getElementById('commInp').value = ''; openDetail(currentImgId); renderGallery();
+        }
 
-        // 程序主入口通电运行
+        // 启动引导
         renderGallery();
     </script>
 </body>
